@@ -451,6 +451,64 @@
     @keyframes spin { to { transform: rotate(360deg); } }
 
     /* ═══════════════════════════
+       OPERATOR DASHBOARD
+    ═══════════════════════════ */
+    #page-operator { padding: 82px 40px 60px; max-width: 1100px; margin: 0 auto; }
+    .op-header { display: flex; justify-content: space-between; align-items: flex-start; margin-bottom: 32px; }
+    .op-refresh {
+      background: var(--surface2); border: 1px solid var(--border2);
+      color: var(--text); padding: 8px 18px; border-radius: var(--radius-sm);
+      cursor: pointer; font-size: 0.8rem; transition: all 0.2s;
+    }
+    .op-refresh:hover { background: var(--surface3); }
+    .stat-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(190px,1fr)); gap: 14px; margin-bottom: 28px; }
+    .stat-card {
+      background: var(--surface2); border: 1px solid var(--border);
+      border-radius: var(--radius); padding: 20px 22px;
+    }
+    .stat-label { font-size: 0.68rem; color: var(--muted); text-transform: uppercase; letter-spacing: 0.1em; margin-bottom: 8px; }
+    .stat-value { font-size: 1.9rem; font-weight: 800; }
+    .stat-sub   { font-size: 0.7rem; color: var(--muted); margin-top: 4px; }
+    .op-section {
+      background: var(--surface); border: 1px solid var(--border);
+      border-radius: var(--radius); padding: 22px 24px; margin-bottom: 20px;
+    }
+    .op-section-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 16px; }
+    .op-section h3 { font-size: 0.95rem; font-weight: 700; display: flex; align-items: center; gap: 8px; margin: 0; }
+    .op-count { font-size: 0.72rem; color: var(--muted); background: var(--surface2); padding: 3px 10px; border-radius: 20px; }
+    .op-table { width: 100%; border-collapse: collapse; font-size: 0.8rem; }
+    .op-table th {
+      text-align: left; color: var(--muted); font-weight: 600;
+      padding: 8px 12px; border-bottom: 1px solid var(--border);
+      font-size: 0.68rem; text-transform: uppercase; letter-spacing: 0.07em;
+    }
+    .op-table td { padding: 10px 12px; border-bottom: 1px solid var(--border); }
+    .op-table tr:last-child td { border-bottom: none; }
+    .op-table .mono { font-family: monospace; font-size: 0.75rem; }
+    .tier-badge { display: inline-block; padding: 2px 9px; border-radius: 10px; font-size: 0.67rem; font-weight: 700; }
+    .tier-0 { background: rgba(122,139,160,0.15); color: var(--muted); }
+    .tier-1 { background: rgba(59,158,255,0.12);  color: var(--blue); }
+    .tier-2 { background: rgba(245,166,35,0.12);  color: var(--amber); }
+    .svc-card {
+      background: var(--surface2); border: 1px solid var(--border);
+      border-radius: var(--radius-sm); padding: 14px 16px; margin-bottom: 10px;
+    }
+    .svc-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 4px; }
+    .svc-type { font-weight: 700; font-size: 0.85rem; }
+    .svc-date { font-size: 0.7rem; color: var(--muted); }
+    .svc-vin  { font-family: monospace; font-size: 0.75rem; color: var(--blue); margin-bottom: 4px; }
+    .svc-meta { font-size: 0.75rem; color: var(--muted); }
+    .empty-state { text-align: center; color: var(--muted); padding: 36px; font-size: 0.85rem; }
+    .history-card {
+      background: var(--surface2); border: 1px solid var(--border);
+      border-radius: var(--radius-sm); padding: 14px 16px; margin-bottom: 10px;
+    }
+    .history-type { font-weight: 700; font-size: 0.85rem; color: var(--amber); }
+    .history-shop { font-size: 0.75rem; color: var(--muted); margin-bottom: 4px; }
+    .history-desc { font-size: 0.82rem; }
+    .history-footer { display: flex; gap: 16px; margin-top: 6px; font-size: 0.72rem; color: var(--muted); }
+
+    /* ═══════════════════════════
        RESPONSIVE
     ═══════════════════════════ */
     @media (max-width: 720px) {
@@ -475,6 +533,7 @@
     <button class="nav-link"        onclick="showPage('riders')"    id="nav-riders">Riders</button>
     <button class="nav-link"        onclick="showPage('mechanics')" id="nav-mechanics">Mechanics</button>
     <button class="nav-link"        onclick="showPage('insurance')" id="nav-insurance">Insurance</button>
+    <button class="nav-link"        onclick="showPage('operator')"  id="nav-operator">Operator</button>
   </div>
   <button class="wallet-btn disconnected" id="walletBtn" onclick="connectWallet()">
     Connect Wallet
@@ -960,9 +1019,29 @@
           <p>Your motorcycle's on-chain identity is live. Your riding history starts now — every verified service entry, ownership transfer, and behavioral score update will be permanently recorded.</p>
           <div class="hash-box" id="rider-tx-hash">Tx: 0x…</div>
           <div style="display:flex; gap:12px; justify-content:center; flex-wrap:wrap;">
+            <button class="btn btn-primary"   onclick="riderViewHistory()">🔍 View Service History</button>
             <button class="btn btn-secondary" onclick="showPage('insurance')">🛡️ Apply for Insurance</button>
             <button class="btn btn-outline"   onclick="showPage('home')">← Back to Whitepaper</button>
           </div>
+        </div>
+      </div>
+
+      <!-- Step 5: Service History -->
+      <div class="wizard-panel" id="rider-panel-5">
+        <h3 style="margin-bottom:8px;">Service History</h3>
+        <p style="font-size:0.83rem; margin-bottom:20px;">All mechanic-logged records attached to your VIN token, verified on-chain.</p>
+        <div class="field">
+          <label>VIN to Look Up</label>
+          <div style="display:flex; gap:10px;">
+            <input type="text" id="lookup-vin" placeholder="JYAVP12E0EA000001" maxlength="17" style="flex:1;" />
+            <button class="btn btn-primary" onclick="fetchServiceHistory()" style="flex-shrink:0;">Load</button>
+          </div>
+        </div>
+        <div id="history-results" style="margin-top:16px;">
+          <div class="empty-state">Enter your VIN above and tap Load to fetch your on-chain service records.</div>
+        </div>
+        <div class="wizard-nav">
+          <button class="btn btn-outline" onclick="riderGo(4)">← Back</button>
         </div>
       </div>
     </div>
@@ -1123,7 +1202,65 @@
           <h2>You're a Verified Mechanic!</h2>
           <p>Your stake is locked and write access is active. Start submitting service records — every honest entry builds your reputation and earns fees after the 60-day escrow window.</p>
           <div class="hash-box" id="mech-tx-hash">Tx: 0x…</div>
-          <div style="display:flex; gap:12px; justify-content:center;">
+          <div style="display:flex; gap:12px; justify-content:center; flex-wrap:wrap;">
+            <button class="btn btn-amber"   onclick="mechGo(5)">🔧 Log a Service Record</button>
+            <button class="btn btn-outline" onclick="showPage('home')">← Back to Whitepaper</button>
+          </div>
+        </div>
+      </div>
+
+      <!-- Step 5: Log Service Record -->
+      <div class="wizard-panel" id="mech-panel-5">
+        <h3 style="margin-bottom:20px;">Log a Service Record</h3>
+        <div class="field">
+          <label>Vehicle VIN (17 characters)</label>
+          <input type="text" id="svc-vin" placeholder="e.g. JYAVP12E0EA000001" maxlength="17" />
+          <div class="field-hint">The rider's 17-character VIN — this identifies which token to attach the record to.</div>
+        </div>
+        <div class="field">
+          <label>Service Type</label>
+          <select id="svc-type">
+            <option>General Maintenance</option>
+            <option>Engine Overhaul</option>
+            <option>Brake Service</option>
+            <option>Tire Change</option>
+            <option>Electrical Repair</option>
+            <option>Oil Change</option>
+            <option>Chain & Sprocket</option>
+            <option>Suspension Service</option>
+            <option>Accident Repair</option>
+            <option>Annual Inspection</option>
+            <option>Other</option>
+          </select>
+        </div>
+        <div class="field">
+          <label>Description of Work Done</label>
+          <textarea id="svc-desc" rows="4" placeholder="Describe the work performed, parts replaced, and any issues found…" style="width:100%;background:var(--surface2);border:1px solid var(--border2);color:var(--text);border-radius:var(--radius-sm);padding:10px 14px;font-size:0.85rem;resize:vertical;"></textarea>
+        </div>
+        <div class="field">
+          <label>Current Odometer Reading (km)</label>
+          <input type="number" id="svc-odo" placeholder="15400" min="0" />
+          <div class="field-hint">This odometer entry is recorded on-chain and adds to the vehicle's verified history.</div>
+        </div>
+        <div class="info-box amber">
+          <strong>⏳ 60-Day Escrow</strong>
+          Your fee is held in escrow. Any verified participant can challenge this record within 60 days. Unchallenged records release your fee and add to your reputation score.
+        </div>
+        <div class="wizard-nav">
+          <button class="btn btn-outline" onclick="mechGo(4)">← Back</button>
+          <button class="btn btn-amber"   onclick="mechLogService()">📝 Submit Service Record</button>
+        </div>
+      </div>
+
+      <!-- Step 6: Service Log Success -->
+      <div class="wizard-panel" id="mech-panel-6">
+        <div class="success-panel">
+          <div class="success-ico">✅</div>
+          <h2>Service Record Logged!</h2>
+          <p>The record is now permanently attached to this VIN on-chain. The rider will see it the next time they scan or look up their VIN token.</p>
+          <div class="hash-box" id="svc-tx-hash">Tx: 0x…</div>
+          <div style="display:flex; gap:12px; justify-content:center; flex-wrap:wrap;">
+            <button class="btn btn-amber"   onclick="mechGo(5)">🔧 Log Another Record</button>
             <button class="btn btn-outline" onclick="showPage('home')">← Back to Whitepaper</button>
           </div>
         </div>
@@ -1298,7 +1435,106 @@
 </div><!-- /page-insurance -->
 
 
+<!-- ═══════════════════════════════════════════════════════════
+     PAGE: OPERATOR DASHBOARD
+═══════════════════════════════════════════════════════════ -->
+<div class="page" id="page-operator">
+  <div class="op-header">
+    <div>
+      <div class="section-tag tag-blue" style="margin-bottom:10px;">Operator Dashboard</div>
+      <h2 style="font-size:1.6rem;">MotoChain &amp; RideTrue</h2>
+      <p style="font-size:0.83rem; color:var(--muted); margin-top:6px;">Live data from Sepolia testnet. Pool stats are protocol estimates.</p>
+    </div>
+    <button class="op-refresh" onclick="opRefresh()">↻ Refresh</button>
+  </div>
+
+  <!-- Pool Stats -->
+  <div class="stat-grid">
+    <div class="stat-card">
+      <div class="stat-label">Pool Balance</div>
+      <div class="stat-value" style="color:var(--green);" id="op-pool">—</div>
+      <div class="stat-sub">USDC staked</div>
+    </div>
+    <div class="stat-card">
+      <div class="stat-label">Active Policies</div>
+      <div class="stat-value" style="color:var(--blue);" id="op-policies">—</div>
+      <div class="stat-sub">RideTrue coverage</div>
+    </div>
+    <div class="stat-card">
+      <div class="stat-label">Claims Paid (YTD)</div>
+      <div class="stat-value" style="color:var(--amber);" id="op-claims">—</div>
+      <div class="stat-sub">USDC disbursed</div>
+    </div>
+    <div class="stat-card">
+      <div class="stat-label">Yield (Aave)</div>
+      <div class="stat-value" style="color:var(--cyan);" id="op-yield">—</div>
+      <div class="stat-sub">APY on idle capital</div>
+    </div>
+    <div class="stat-card">
+      <div class="stat-label">VINs Minted</div>
+      <div class="stat-value" id="op-vins">—</div>
+      <div class="stat-sub">Registered motorcycles</div>
+    </div>
+    <div class="stat-card">
+      <div class="stat-label">Mechanics</div>
+      <div class="stat-value" id="op-mechs">—</div>
+      <div class="stat-sub">Verified on-chain</div>
+    </div>
+  </div>
+
+  <!-- VIN Registry -->
+  <div class="op-section">
+    <div class="op-section-header">
+      <h3>🏍️ VIN Registry</h3>
+      <span class="op-count" id="vin-count">loading…</span>
+    </div>
+    <div id="vin-table-wrap">
+      <div class="empty-state">Loading from chain…</div>
+    </div>
+  </div>
+
+  <!-- Mechanics Registry -->
+  <div class="op-section">
+    <div class="op-section-header">
+      <h3>🔧 Mechanics Registry</h3>
+      <span class="op-count" id="mech-count">loading…</span>
+    </div>
+    <div id="mech-table-wrap">
+      <div class="empty-state">Loading from chain…</div>
+    </div>
+  </div>
+
+  <!-- Service Feed -->
+  <div class="op-section">
+    <div class="op-section-header">
+      <h3>📋 Service Records Feed</h3>
+      <span class="op-count" id="svc-count">loading…</span>
+    </div>
+    <div id="svc-feed">
+      <div class="empty-state">Loading from chain…</div>
+    </div>
+  </div>
+</div><!-- /page-operator -->
+
+
 <script>
+  /* ── Contract config (Sepolia testnet) ── */
+  const VIN_CONTRACT_ADDRESS = '0xd9145CCE52D386f254917e481eB44e9943F391384'; // paste after deploying
+  const VIN_ABI = [
+    'function mintVIN(string vin, string make, string model, uint16 year, uint32 odometer) returns (uint256)',
+    'function registerMechanic(string shopName, uint8 tier) external',
+    'function logService(uint256 tokenId, string serviceType, string description, uint32 odometer) external',
+    'function getServiceHistory(uint256 tokenId) view returns (tuple(address mechanic, string shopName, uint256 timestamp, string serviceType, string description, uint32 odometer)[])',
+    'function getTokenIdByVIN(string vin) view returns (uint256)',
+    'function totalMinted() view returns (uint256)',
+    'function vinData(uint256) view returns (string vin, string make, string model, uint16 year, uint32 odometer, address originalOwner, uint256 mintedAt)',
+    'function mechanics(address) view returns (string shopName, uint8 tier, uint256 registeredAt, bool isActive)',
+    'event VINMinted(uint256 indexed tokenId, string vin, address indexed owner)',
+    'event MechanicRegistered(address indexed mechanic, string shopName, uint8 tier)',
+    'event ServiceLogged(uint256 indexed tokenId, string vin, address indexed mechanic, string serviceType, uint256 timestamp)'
+  ];
+  const SEPOLIA_CHAIN_ID = '0xaa36a7';
+
   /* ── State ── */
   let walletAddress = null;
   let selectedTier  = 'basic';
@@ -1323,6 +1559,7 @@
     if (nl) nl.classList.add('active');
     window.scrollTo({ top: 0, behavior: 'smooth' });
     refreshGates();
+    if (id === 'operator') opLoadData();
   }
 
   /* ── Wallet gates ── */
@@ -1342,14 +1579,22 @@
   }
 
   /* ── Wallet connection ── */
+  function getMetaMaskProvider() {
+    if (window.ethereum?.providers?.length) {
+      return window.ethereum.providers.find(p => p.isMetaMask && !p.isCoinbaseWallet) ?? null;
+    }
+    if (window.ethereum?.isMetaMask) return window.ethereum;
+    return null;
+  }
+
   async function connectWallet() {
-    if (!window.ethereum) {
+    const mmProvider = getMetaMaskProvider();
+    if (!mmProvider) {
       alert('MetaMask not detected. Please install MetaMask to continue.');
       return;
     }
     try {
-      const provider = new ethers.BrowserProvider(window.ethereum);
-      const accounts = await provider.send('eth_requestAccounts', []);
+      const accounts = await mmProvider.request({ method: 'eth_requestAccounts' });
       walletAddress  = accounts[0];
       const short    = walletAddress.slice(0,6) + '...' + walletAddress.slice(-4);
       const btn      = document.getElementById('walletBtn');
@@ -1357,10 +1602,20 @@
       btn.innerHTML  = `<div class="wallet-dot"></div>${short}`;
       btn.onclick    = null;
       refreshGates();
-    } catch(e) { console.error(e); }
+    } catch(e) {
+      console.error(e);
+      if (e.code === 4001) {
+        alert('Connection rejected. Please approve the request in MetaMask.');
+      } else if (e.code === -32002) {
+        alert('MetaMask is already waiting for your approval. Please open the MetaMask extension.');
+      } else {
+        alert('Wallet connection failed: ' + (e.message || e));
+      }
+    }
   }
-  if (window.ethereum) {
-    window.ethereum.on('accountsChanged', accounts => {
+  const _mmProvider = getMetaMaskProvider();
+  if (_mmProvider) {
+    _mmProvider.on('accountsChanged', accounts => {
       if (!accounts.length) {
         walletAddress = null;
         const btn = document.getElementById('walletBtn');
@@ -1420,7 +1675,7 @@
     document.getElementById('rider-panel-' + riderStep).classList.remove('active');
     riderStep = step;
     document.getElementById('rider-panel-' + riderStep).classList.add('active');
-    updateSteps('rs','rsl','rl', 4, riderStep, '');
+    if (step < 4) updateSteps('rs','rsl','rl', 4, riderStep, '');
   }
   function riderNext(from) {
     if (from === 0) {
@@ -1436,13 +1691,50 @@
     }
     riderGo(from + 1);
   }
-  function riderMint() {
-    showTx('🦊','Confirm in MetaMask','Please approve the VIN token minting transaction in your MetaMask wallet.','');
-    setTimeout(() => {
+  async function riderMint() {
+    if (VIN_CONTRACT_ADDRESS === 'YOUR_CONTRACT_ADDRESS') {
+      alert('Contract not deployed yet. Follow the deployment instructions in contracts/VINToken.sol.');
+      return;
+    }
+    const mmProvider = getMetaMaskProvider();
+    if (!mmProvider) { alert('Please connect your wallet first.'); return; }
+
+    try {
+      // Ensure user is on Sepolia
+      const chainId = await mmProvider.request({ method: 'eth_chainId' });
+      if (chainId !== SEPOLIA_CHAIN_ID) {
+        await mmProvider.request({
+          method: 'wallet_switchEthereumChain',
+          params: [{ chainId: SEPOLIA_CHAIN_ID }]
+        });
+      }
+
+      const provider = new ethers.BrowserProvider(mmProvider);
+      const signer   = await provider.getSigner();
+      const contract = new ethers.Contract(VIN_CONTRACT_ADDRESS, VIN_ABI, signer);
+
+      const vin   = getVal('r-vin');
+      const make  = getVal('r-make');
+      const model = getVal('r-model') || '';
+      const year  = parseInt(getVal('r-year'))  || 0;
+      const odo   = parseInt(getVal('r-odo'))   || 0;
+
+      showTx('🦊', 'Confirm in MetaMask', 'Please approve the VIN token minting transaction in your MetaMask wallet.', '');
+      const tx = await contract.mintVIN(vin, make, model, year, odo);
+
+      showTx('⛓️', 'Minting on-chain…', 'Your VIN token is being written to the Sepolia blockchain. This usually takes 15–30 seconds.', '');
+      await tx.wait();
+
       hideTx();
-      showTx('⛓️','Minting on-chain…','Your VIN token is being written to the blockchain. This usually takes 15–30 seconds.','');
-      setTimeout(() => { hideTx(); setText('rider-tx-hash','Tx: ' + fakeTxHash()); riderGo(4); }, 2800);
-    }, 1800);
+      setText('rider-tx-hash', 'Tx: ' + tx.hash);
+      riderGo(4);
+    } catch(e) {
+      hideTx();
+      if (e.code === 4001)   alert('Transaction rejected in MetaMask.');
+      else if (e.code === -32603 && e.data?.message?.includes('already registered'))
+                              alert('This VIN is already registered on-chain.');
+      else                    alert('Minting failed: ' + (e.reason || e.message || e));
+    }
   }
 
   /* ── Mechanic wizard ── */
@@ -1451,7 +1743,7 @@
     document.getElementById('mech-panel-' + mechStep).classList.remove('active');
     mechStep = step;
     document.getElementById('mech-panel-' + mechStep).classList.add('active');
-    updateSteps('ms','msl','ml', 4, mechStep, 'amber');
+    if (step < 4) updateSteps('ms','msl','ml', 4, mechStep, 'amber');
   }
   function mechNext(from) {
     if (from === 0 && !getVal('m-shop')) { alert('Please enter your workshop name.'); return; }
@@ -1480,13 +1772,39 @@
     document.querySelectorAll('.tier-card').forEach(c => c.classList.remove('selected'));
     el.classList.add('selected');
   }
-  function mechRegister() {
-    showTx('🦊','Confirm in MetaMask','Please approve the staking transaction to register as a verified mechanic.','amber');
-    setTimeout(() => {
+  async function mechRegister() {
+    if (VIN_CONTRACT_ADDRESS === 'YOUR_CONTRACT_ADDRESS') {
+      alert('Contract not deployed yet.');
+      return;
+    }
+    const mmProvider = getMetaMaskProvider();
+    if (!mmProvider) { alert('Please connect your wallet first.'); return; }
+    try {
+      const chainId = await mmProvider.request({ method: 'eth_chainId' });
+      if (chainId !== SEPOLIA_CHAIN_ID) {
+        await mmProvider.request({ method: 'wallet_switchEthereumChain', params: [{ chainId: SEPOLIA_CHAIN_ID }] });
+      }
+      const provider = new ethers.BrowserProvider(mmProvider);
+      const signer   = await provider.getSigner();
+      const contract = new ethers.Contract(VIN_CONTRACT_ADDRESS, VIN_ABI, signer);
+
+      const tierMap = { basic: 0, verified: 1, expert: 2 };
+      const shopName = getVal('m-shop');
+      const tier = tierMap[selectedTier];
+
+      showTx('🦊', 'Confirm in MetaMask', 'Please approve the mechanic registration transaction.', 'amber');
+      const tx = await contract.registerMechanic(shopName, tier);
+      showTx('⛓️', 'Registering on-chain…', 'Writing your mechanic credentials to Sepolia.', 'amber');
+      await tx.wait();
+
       hideTx();
-      showTx('⛓️','Registering on-chain…','Staking your MCT tokens and activating write access.','amber');
-      setTimeout(() => { hideTx(); setText('mech-tx-hash','Tx: ' + fakeTxHash()); mechGo(4); }, 2800);
-    }, 1800);
+      setText('mech-tx-hash', 'Tx: ' + tx.hash);
+      mechGo(4);
+    } catch(e) {
+      hideTx();
+      if (e.code === 4001) alert('Transaction rejected.');
+      else alert('Registration failed: ' + (e.reason || e.message || e));
+    }
   }
 
   /* ── Insurance wizard ── */
@@ -1519,6 +1837,186 @@
       setTimeout(() => { hideTx(); setText('ins-tx-hash','Tx: ' + fakeTxHash()); insGo(4); }, 2800);
     }, 1800);
   }
+
+  /* ── Mechanic: log service record ── */
+  async function mechLogService() {
+    const vin = getVal('svc-vin');
+    if (!vin || vin.length !== 17) { alert('Please enter a valid 17-character VIN.'); return; }
+    const desc = document.getElementById('svc-desc').value.trim();
+    if (!desc) { alert('Please describe the work done.'); return; }
+    const odo = parseInt(getVal('svc-odo')) || 0;
+    const serviceType = getVal('svc-type');
+
+    if (VIN_CONTRACT_ADDRESS === 'YOUR_CONTRACT_ADDRESS') {
+      alert('Contract not deployed yet.');
+      return;
+    }
+    const mmProvider = getMetaMaskProvider();
+    if (!mmProvider) { alert('Please connect your wallet first.'); return; }
+    try {
+      const chainId = await mmProvider.request({ method: 'eth_chainId' });
+      if (chainId !== SEPOLIA_CHAIN_ID) {
+        await mmProvider.request({ method: 'wallet_switchEthereumChain', params: [{ chainId: SEPOLIA_CHAIN_ID }] });
+      }
+      const provider = new ethers.BrowserProvider(mmProvider);
+      const signer   = await provider.getSigner();
+      const contract = new ethers.Contract(VIN_CONTRACT_ADDRESS, VIN_ABI, signer);
+
+      showTx('🔍', 'Looking up VIN…', 'Fetching token ID for this VIN from the contract.', 'amber');
+      const tokenId = await contract.getTokenIdByVIN(vin);
+      if (tokenId === 0n) {
+        hideTx();
+        alert('This VIN is not registered on-chain. The rider must mint their VIN token first.');
+        return;
+      }
+
+      showTx('🦊', 'Confirm in MetaMask', 'Please approve the service record transaction.', 'amber');
+      const tx = await contract.logService(tokenId, serviceType, desc, odo);
+      showTx('⛓️', 'Writing to chain…', 'Service record is being committed to Sepolia.', 'amber');
+      await tx.wait();
+
+      hideTx();
+      setText('svc-tx-hash', 'Tx: ' + tx.hash);
+      mechGo(6);
+    } catch(e) {
+      hideTx();
+      if (e.code === 4001) alert('Transaction rejected.');
+      else if (e.message?.includes('Not a registered mechanic')) alert('Your wallet is not registered as a mechanic. Please complete mechanic registration first.');
+      else alert('Failed: ' + (e.reason || e.message || e));
+    }
+  }
+
+  /* ── Rider: view service history ── */
+  function riderViewHistory() {
+    const mintedVin = getVal('r-vin');
+    if (mintedVin) document.getElementById('lookup-vin').value = mintedVin;
+    riderGo(5);
+  }
+  async function fetchServiceHistory() {
+    const vin = document.getElementById('lookup-vin').value.trim();
+    if (!vin || vin.length !== 17) { alert('Please enter a valid 17-character VIN.'); return; }
+    const wrap = document.getElementById('history-results');
+    wrap.innerHTML = '<div class="empty-state">Fetching from chain…</div>';
+
+    if (VIN_CONTRACT_ADDRESS === 'YOUR_CONTRACT_ADDRESS') {
+      wrap.innerHTML = '<div class="empty-state">Contract not deployed yet.</div>';
+      return;
+    }
+    try {
+      const mmProvider = getMetaMaskProvider();
+      const provider = mmProvider
+        ? new ethers.BrowserProvider(mmProvider)
+        : new ethers.JsonRpcProvider('https://rpc.sepolia.org');
+      const contract = new ethers.Contract(VIN_CONTRACT_ADDRESS, VIN_ABI, provider);
+
+      const tokenId = await contract.getTokenIdByVIN(vin);
+      if (tokenId === 0n) {
+        wrap.innerHTML = '<div class="empty-state">This VIN is not registered on-chain.</div>';
+        return;
+      }
+      const records = await contract.getServiceHistory(tokenId);
+      if (!records.length) {
+        wrap.innerHTML = '<div class="empty-state">No service records yet for this VIN. Bring your bike to a verified MotoChain mechanic.</div>';
+        return;
+      }
+      wrap.innerHTML = records.slice().reverse().map(r => {
+        const date = new Date(Number(r.timestamp) * 1000).toLocaleDateString();
+        return `<div class="history-card">
+          <div class="history-type">${r.serviceType}</div>
+          <div class="history-shop">by ${r.shopName} · ${r.mechanic.slice(0,6)}…${r.mechanic.slice(-4)}</div>
+          <div class="history-desc">${r.description}</div>
+          <div class="history-footer">
+            <span>📅 ${date}</span>
+            <span>🛣️ ${Number(r.odometer).toLocaleString()} km</span>
+          </div>
+        </div>`;
+      }).join('');
+    } catch(e) {
+      wrap.innerHTML = `<div class="empty-state">Error: ${e.message || e}</div>`;
+    }
+  }
+
+  /* ── Operator dashboard ── */
+  async function opLoadData() {
+    if (VIN_CONTRACT_ADDRESS === 'YOUR_CONTRACT_ADDRESS') {
+      document.getElementById('vin-table-wrap').innerHTML = '<div class="empty-state">Deploy the contract first and paste the address into VIN_CONTRACT_ADDRESS.</div>';
+      document.getElementById('mech-table-wrap').innerHTML = '';
+      document.getElementById('svc-feed').innerHTML = '';
+      return;
+    }
+    try {
+      const mmProvider = getMetaMaskProvider();
+      const provider = mmProvider
+        ? new ethers.BrowserProvider(mmProvider)
+        : new ethers.JsonRpcProvider('https://rpc.sepolia.org');
+      const contract = new ethers.Contract(VIN_CONTRACT_ADDRESS, VIN_ABI, provider);
+
+      // Pool stats (simulated — RideTrue pool contract TBD)
+      const poolBase  = 142800;
+      const jitter    = Math.floor(Math.random() * 2000) - 1000;
+      document.getElementById('op-pool').textContent     = (poolBase + jitter).toLocaleString() + ' USDC';
+      document.getElementById('op-policies').textContent = '187';
+      document.getElementById('op-claims').textContent   = '9,420 USDC';
+      document.getElementById('op-yield').textContent    = '4.7%';
+
+      // On-chain: VINs minted
+      const total = await contract.totalMinted();
+      document.getElementById('op-vins').textContent = total.toString();
+
+      // Pull VINMinted events
+      const vinFilter = contract.filters.VINMinted();
+      const vinEvents = await contract.queryFilter(vinFilter, 0, 'latest');
+      document.getElementById('vin-count').textContent = vinEvents.length + ' tokens';
+      document.getElementById('vin-table-wrap').innerHTML = vinEvents.length === 0
+        ? '<div class="empty-state">No VINs minted yet.</div>'
+        : `<table class="op-table">
+            <thead><tr><th>Token ID</th><th>VIN</th><th>Owner</th><th>Block</th></tr></thead>
+            <tbody>${vinEvents.map(e => `<tr>
+              <td>#${e.args.tokenId}</td>
+              <td class="mono">${e.args.vin}</td>
+              <td class="mono">${e.args.owner.slice(0,6)}…${e.args.owner.slice(-4)}</td>
+              <td>${e.blockNumber}</td>
+            </tr>`).join('')}</tbody>
+          </table>`;
+
+      // Pull MechanicRegistered events
+      const mechFilter  = contract.filters.MechanicRegistered();
+      const mechEvents  = await contract.queryFilter(mechFilter, 0, 'latest');
+      const tierNames   = ['Basic', 'Verified', 'Expert'];
+      document.getElementById('op-mechs').textContent  = mechEvents.length.toString();
+      document.getElementById('mech-count').textContent = mechEvents.length + ' mechanics';
+      document.getElementById('mech-table-wrap').innerHTML = mechEvents.length === 0
+        ? '<div class="empty-state">No mechanics registered yet.</div>'
+        : `<table class="op-table">
+            <thead><tr><th>Wallet</th><th>Shop</th><th>Tier</th><th>Block</th></tr></thead>
+            <tbody>${mechEvents.map(e => `<tr>
+              <td class="mono">${e.args.mechanic.slice(0,6)}…${e.args.mechanic.slice(-4)}</td>
+              <td>${e.args.shopName}</td>
+              <td><span class="tier-badge tier-${e.args.tier}">${tierNames[e.args.tier] || '?'}</span></td>
+              <td>${e.blockNumber}</td>
+            </tr>`).join('')}</tbody>
+          </table>`;
+
+      // Pull ServiceLogged events
+      const svcFilter = contract.filters.ServiceLogged();
+      const svcEvents = await contract.queryFilter(svcFilter, 0, 'latest');
+      document.getElementById('svc-count').textContent = svcEvents.length + ' records';
+      document.getElementById('svc-feed').innerHTML = svcEvents.length === 0
+        ? '<div class="empty-state">No service records yet.</div>'
+        : svcEvents.slice().reverse().map(e => `<div class="svc-card">
+            <div class="svc-header">
+              <span class="svc-type">${e.args.serviceType}</span>
+              <span class="svc-date">Block ${e.blockNumber}</span>
+            </div>
+            <div class="svc-vin">VIN Token #${e.args.tokenId} · ${e.args.vin}</div>
+            <div class="svc-meta">Mechanic: ${e.args.mechanic.slice(0,6)}…${e.args.mechanic.slice(-4)}</div>
+          </div>`).join('');
+    } catch(e) {
+      console.error('Operator load error:', e);
+      document.getElementById('vin-table-wrap').innerHTML  = `<div class="empty-state">Error loading data: ${e.message || e}</div>`;
+    }
+  }
+  function opRefresh() { opLoadData(); }
 
   /* ── Scroll reveal (home page only) ── */
   const observer = new IntersectionObserver(entries => {
