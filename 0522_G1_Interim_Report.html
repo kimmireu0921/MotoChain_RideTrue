@@ -79,9 +79,9 @@
   </style>
 </head>
 <body>
-<header class="topbar"><div class="brand"><strong>MotoChain &amp; RideTrue</strong><span>Mireu Kim and Enxhi Topalli</span></div><nav class="nav" aria-label="Slide navigation"><a href="#slide-1">I — Exec Summary</a><a href="#slide-2">II.1 — Problem</a><a href="#slide-4">II.2 — Architecture</a><a href="#slide-11">II.3 — UX</a><a href="#slide-13">II.4 — Audience</a><a href="#slide-15">II.5 — Economics</a><a href="#slide-26">II.6 — Defense</a></nav></header>
+<header class="topbar"><div class="brand"><strong>MotoChain &amp; RideTrue</strong><span>Mireu Kim and Enxhi Topalli</span></div><nav class="nav" aria-label="Slide navigation"><a href="#slide-1">I — Exec Summary</a><a href="#slide-2">II.1 — Problem</a><a href="#slide-4">II.2 — Architecture</a><a href="#slide-11">II.3 — UX</a><a href="#slide-13">II.4 — Audience</a><a href="#slide-15">II.5 — Economics</a><a href="#slide-26">II.6 — Defense</a><a href="#slide-29">II.7 — RideTrue</a></nav></header>
   <div class="progress"><div id="progressBar"></div></div>
-  <aside class="dotnav" aria-label="Slide dots"><a href="#slide-1"></a><a href="#slide-2"></a><a href="#slide-3"></a><a href="#slide-4"></a><a href="#slide-5"></a><a href="#slide-6"></a><a href="#slide-7"></a><a href="#slide-8"></a><a href="#slide-9"></a><a href="#slide-10"></a><a href="#slide-11"></a><a href="#slide-12"></a><a href="#slide-13"></a><a href="#slide-14"></a><a href="#slide-15"></a><a href="#slide-16"></a><a href="#slide-17"></a><a href="#slide-18"></a><a href="#slide-19"></a><a href="#slide-20"></a><a href="#slide-21"></a><a href="#slide-22"></a><a href="#slide-23"></a><a href="#slide-24"></a><a href="#slide-25"></a><a href="#slide-26"></a><a href="#slide-27"></a><a href="#slide-28"></a></aside>
+  <aside class="dotnav" aria-label="Slide dots"><a href="#slide-1"></a><a href="#slide-2"></a><a href="#slide-3"></a><a href="#slide-4"></a><a href="#slide-5"></a><a href="#slide-6"></a><a href="#slide-7"></a><a href="#slide-8"></a><a href="#slide-9"></a><a href="#slide-10"></a><a href="#slide-11"></a><a href="#slide-12"></a><a href="#slide-13"></a><a href="#slide-14"></a><a href="#slide-15"></a><a href="#slide-16"></a><a href="#slide-17"></a><a href="#slide-18"></a><a href="#slide-19"></a><a href="#slide-20"></a><a href="#slide-21"></a><a href="#slide-22"></a><a href="#slide-23"></a><a href="#slide-24"></a><a href="#slide-25"></a><a href="#slide-26"></a><a href="#slide-27"></a><a href="#slide-28"></a><a href="#slide-29"></a><a href="#slide-30"></a><a href="#slide-31"></a><a href="#slide-32"></a><a href="#slide-33"></a><a href="#slide-34"></a></aside>
   <main class="deck">
     <section class="slide" id="slide-1"><div class="wrap hero"><div class="card pad"><div class="eyebrow">I — Executive Summary &amp; Project Identity</div><h1>MotoChain & RideTrue</h1><p class="lede">A verifiable identity layer for motorcycles and a behavior-based insurance market for riders, built to replace fragmented trust systems with portable, user-owned, cryptographically verified records.</p><div class="pill-row"><span class="pill"><b>Product:</b> VIN identity + insurance protocol</span><span class="pill"><b>Users:</b> riders, mechanics, dealers, LPs</span><span class="pill"><b>Stack:</b> Base L2 + smart contracts</span><span class="pill"><b>Edge:</b> verifiable history + behavior pricing</span></div><div class="stats"><div class="stat"><div class="kpi">$120B+</div><div class="label">motorcycle market</div></div><div class="stat"><div class="kpi">$70B+</div><div class="label">motorcycle insurance market</div></div><div class="stat"><div class="kpi">Base</div><div class="label">launch layer</div></div><div class="stat"><div class="kpi">2 layers</div><div class="label">identity + behavior protocol</div></div></div></div><div class="side"><div class="panel"><h3>Mission</h3><p>Replace trust-heavy vehicle history and insurance with a neutral protocol where riders own history, mechanics earn reputation, and insurers price risk from verifiable behavior.</p></div><div class="panel"><h3>What the deck covers</h3><ul><li>Problem and market sizing</li><li>Architecture and flows</li><li>Revenue, tokenomics, moat</li><li>Security and stress tests</li></ul></div><div class="quote">Goal: make the system look buildable, visual, and defensible.</div></div></div></section>
     <section class="slide" id="slide-2"><div class="wrap grid-2"><div class="card pad"><div class="eyebrow">II.1 — Problem &amp; Root Cause Analysis</div><h2>Two markets, one structural failure: trust</h2><div class="grid-2"><div class="feature"><h3>Used motorcycle resale</h3><p>Buyers cannot easily verify accident history, mileage integrity, or service quality. Honest sellers get discounted because the market assumes risk.</p></div><div class="feature"><h3>Insurance pricing</h3><p>Insurers rely on proxies and coarse segments. Safe riders subsidize risky riders, and premiums do not reflect true behavior.</p></div></div></div><div class="card pad"><div class="eyebrow">II.1 — Market Quantification</div><h2>The inefficiency is large enough to matter</h2><div class="bars"><div class="bar-row"><div>Motorcycle market</div><div class="bar"><span style="width:92%"></span></div><div>$120B+</div></div><div class="bar-row"><div>Insurance market</div><div class="bar"><span style="width:74%"></span></div><div>$70B+</div></div><div class="bar-row"><div>Value lost to fraud / mispricing</div><div class="bar"><span style="width:58%"></span></div><div>5–10%</div></div><div class="bar-row"><div>Potential improvement</div><div class="bar"><span style="width:28%"></span></div><div>1–2%</div></div></div><p class="footer-note">Even a small improvement in trust or actuarial accuracy creates billion-scale value.</p></div></div></section>
@@ -111,6 +111,166 @@
     <section class="slide" id="slide-26"><div class="wrap grid-2"><div class="card pad"><div class="eyebrow">II.6 — Defensive Strategy &amp; Risk Mitigation</div><h2>Vertical network effects</h2><p class="lede">The more motorcycles, riders, mechanics, dealers, and insurers use the protocol, the more valuable each record becomes. That creates a compounding dataset that is hard to replicate from scratch.</p><div class="pill-row" style="margin-top:14px;"><span class="pill">Vertical specialization</span><span class="pill">Dual-protocol design</span><span class="pill">User-owned identity</span><span class="pill">Korea-first wedge</span><span class="pill">Consumer-grade UX</span></div></div><div class="card pad"><div class="eyebrow">II.6 — Competitive Analysis</div><h2>Three competitor groups, one core advantage</h2><table class="table"><tr><th>Competitor</th><th>Strength</th><th>Weakness</th></tr><tr><td>Centralized history providers</td><td>Brand trust, large datasets</td><td>No portable identity, no economic enforcement</td></tr><tr><td>Traditional insurers</td><td>Capital, regulation, distribution</td><td>Behavior data is siloed and non-portable</td></tr><tr><td>DeFi insurance protocols</td><td>On-chain capital pooling</td><td>Not specialized for real-world vehicle risk</td></tr></table></div></div></section>
     <section class="slide" id="slide-27"><div class="wrap grid-2"><div class="card pad"><div class="eyebrow">II.6 — Security Roadmap</div><h2>Three-layer fraud prevention architecture</h2><table class="table" style="font-size:.82rem; margin-bottom:16px;"><tr><th>Layer</th><th>Mechanism</th><th>Enforcement</th></tr><tr><td><strong>Prevention</strong></td><td>Co-signing, hardware capture, multi-signature validation</td><td>Invalid entries rejected</td></tr><tr><td><strong>Detection</strong></td><td>Bounty market, anomaly detection, re-verification</td><td>Suspicious records flagged</td></tr><tr><td><strong>Enforcement</strong></td><td>Tiered slashing, escrow windows, stake-at-risk</td><td>Fraudsters economically punished</td></tr></table><div style="padding:12px; background:rgba(255,107,107,.08); border-left:3px solid var(--red); font-size:.82rem; margin-bottom:14px;"><strong>Key principle:</strong> Make fraud unprofitable by raising the cost of lying higher than the value of the fake record.</div></div><div class="card pad"><div class="eyebrow">II.6 — Risk Controls</div><h2>Security, oracle, and pool risk</h2><div class="grid-2"><div class="feature"><h3>Oracle risk</h3><p>Multi-source verification, stale-data safeguards, and fallback review logic.</p></div><div class="feature"><h3>Mechanic fraud</h3><p>Layered prevention, detection, and enforcement make fraud uneconomic.</p></div><div class="feature"><h3>Claim shocks</h3><p>Catastrophe reserve, staged payouts, and circuit breakers reduce bank-run dynamics.</p></div><div class="feature"><h3>Liquidity risk</h3><p>Reserve floors, capped yield deployment, and exit queues protect withdrawals.</p></div></div></div></div></section>
     <section class="slide" id="slide-28"><div class="wrap grid-2"><div class="card pad"><div class="eyebrow">II.6 — Security Engineering</div><h2>Pre-launch gate and independent audit standards</h2><div class="grid-2"><div class="feature"><h3>Pre-launch engineering gate</h3><p>≥90% unit and integration test coverage for all fund-handling contracts. Property-based and invariant testing for accounting, staking, slashing, and payout flows. Fuzz testing via Echidna or Foundry invariant fuzzing. Static analysis via Slither with zero unresolved high-severity findings before audit handoff. Internal threat modeling reviewed by the core team and at least one external security advisor.</p></div><div class="feature"><h3>External audits</h3><p>Minimum two independent smart-contract audits before mainnet deployment. Target firms: OpenZeppelin, Trail of Bits, ChainSecurity, Quantstamp, Spearbit, Code4rena competitive audit. At least one audit must include formal verification of accounting, escrow, and slashing logic. All reports published in full — including unresolved findings and team responses.</p></div><div class="feature"><h3>Bug bounty (Immunefi)</h3><p>Hosted on Immunefi from mainnet launch and live for the lifetime of the protocol. Indicative reward bands: Critical up to $250,000 · High up to $75,000 · Medium up to $15,000 · Low up to $2,500. Annual budget funded from the treasury allocation.</p></div><div class="feature"><h3>Operational security</h3><p>Treasury and admin functions controlled by a 5-of-9 multi-sig with geographically distributed signers. Time-locked upgrades: 48-hour minimum for any non-emergency parameter change. Emergency pause restricted to narrow scope with documented invocation criteria. Public incident response runbook with quarterly drills. Annual third-party penetration testing for mobile client and telematics ingestion systems.</p></div></div></div><div class="card pad"><div class="eyebrow">II.6 — Ongoing Security Posture</div><h2>Security as a continuous process, not a launch checklist</h2><div class="mosaic"><div class="mini"><b>Incremental audits</b><span>Each material protocol upgrade is preceded by an incremental audit before mainnet deployment.</span></div><div class="mini"><b>Continuous bug bounty</b><span>Bug bounty remains live and fully funded for the lifetime of the protocol — not just at launch.</span></div><div class="mini"><b>Threat model feedback loop</b><span>Audit and bounty findings feed back into the threat model on a continuous basis.</span></div><div class="mini"><b>Annual pen testing</b><span>Third-party penetration tests annually cover mobile client and back-end telematics ingestion systems.</span></div></div><div style="margin-top:14px; padding:12px; background:rgba(78,229,154,.08); border-left:3px solid var(--green); font-size:.82rem;">Security is a launch-gating requirement, not a post-launch concern. The protocol will not accept user funds until both independent audits are complete and all critical findings are fully resolved.</div></div></div></section>
+    <section class="slide" id="slide-29"><div class="wrap"><div class="card pad">
+      <div class="eyebrow">II.7 — RIDETRUE · PROTOCOL FLOW</div>
+      <h2>Claim Cycle</h2>
+      <p class="lede">End-to-end automated · oracle-verified · settled on-chain</p>
+      <div class="grid-3" style="margin-top:20px;">
+        <div class="feature"><div class="num">01</div><h3>INCIDENT</h3><p>Accident, theft, or damage event</p></div>
+        <div class="feature"><div class="num">02</div><h3>CLAIM SUBMISSION</h3><p>Submitted via app to smart contract</p></div>
+        <div class="feature"><div class="num">03</div><h3>ORACLE VERIFICATION</h3><p>Multi-source evidence aggregated</p></div>
+        <div class="feature"><div class="num">04</div><h3>CONSENSUS</h3><p>Validators reach quorum on validity</p></div>
+        <div class="feature"><div class="num">05</div><h3>AUTOMATED PAYOUT</h3><p>USDC released from pool to rider</p></div>
+        <div class="feature"><div class="num">06</div><h3>POOL REBALANCE</h3><p>Reserves and premiums recalibrate</p></div>
+      </div>
+      <div style="margin-top:14px; padding:12px; background:rgba(39,216,216,.08); border-left:3px solid var(--cyan); font-size:.82rem;">Smart-contract enforced · stablecoin settled · transparent by design</div>
+    </div></div></section>
+    <section class="slide" id="slide-30"><div class="wrap"><div class="card pad">
+      <div class="eyebrow">II.7 — RIDETRUE · MONEY FLOWS</div>
+      <h2>Where the Money Goes</h2>
+      <p class="lede">What comes in · What goes out · Year 1 (realistic model from Section 5.9)</p>
+      <div class="grid-2" style="margin-top:16px;">
+        <div>
+          <h3 style="color:var(--green); text-transform:uppercase; letter-spacing:.08em; margin-bottom:12px;">Money In</h3>
+          <div class="timeline">
+            <div class="milestone"><div class="date">₩2.16B</div><div><strong>RIDER PREMIUMS</strong><p>2,000 riders × ₩90K/mo</p></div></div>
+            <div class="milestone"><div class="date">₩3.00B</div><div><strong>LP POOL CAPITAL</strong><p>Foundation + DeFi + institutional</p></div></div>
+            <div class="milestone"><div class="date">₩60M</div><div><strong>B2B DATA FEES</strong><p>Insurers, lenders, marketplaces</p></div></div>
+            <div class="milestone"><div class="date">₩30M</div><div><strong>DeFi YIELD</strong><p>Conservative returns on reserves</p></div></div>
+          </div>
+        </div>
+        <div>
+          <h3 style="color:var(--red); text-transform:uppercase; letter-spacing:.08em; margin-bottom:12px;">Money Out</h3>
+          <div class="timeline">
+            <div class="milestone"><div class="date">₩750M</div><div><strong>CLAIMS PAID</strong><p>Verified claims, paid in USDC</p></div></div>
+            <div class="milestone"><div class="date">₩216M</div><div><strong>SAFE-RIDER REBATES</strong><p>Returned to claim-free riders</p></div></div>
+            <div class="milestone"><div class="date">₩1.19B</div><div><strong>RESERVES &amp; REINSURANCE</strong><p>Catastrophe + liquidity buffer</p></div></div>
+            <div class="milestone"><div class="date">₩1.80B</div><div><strong>TEAM &amp; OPERATIONS</strong><p>Engineering, audits, BD, security</p></div></div>
+          </div>
+        </div>
+      </div>
+      <div style="margin-top:14px; padding:14px; background:rgba(78,229,154,.08); border-left:3px solid var(--green); font-size:.85rem;"><strong>Example · Ji-min · 28 · delivery rider · Seoul</strong> · Safety score 92/100 · top quartile · zero claims Y1<br/><span style="margin-top:4px; display:block;">Paid in: <strong>₩1,080,000</strong> &nbsp;·&nbsp; Received back: <strong>₩180,000</strong> (safe-rider rebate) &nbsp;·&nbsp; Net premium: <strong>₩900,000</strong> for full-year coverage<br/><span style="color:var(--muted);">vs. comparable Korean motorcycle policy ₩1.0M–₩1.4M — fairer pricing, portable behavior score, claims paid on-chain in days</span></span></div>
+      <p class="footer-note" style="margin-top:8px;">Stress-tested model · 15% claim frequency · ₩2.5M average severity · Year 1 total flow: ₩5.25B processed</p>
+    </div></div></section>
+    <section class="slide" id="slide-31"><div class="wrap"><div class="card pad">
+      <div class="eyebrow">II.7 — RIDETRUE · MECHANIC TRUST</div>
+      <h2>How We Stop Fraud</h2>
+      <p class="lede">Three layers of defense — built into every service record on MotoChain</p>
+      <div class="grid-3" style="margin-top:16px;">
+        <div>
+          <div style="text-transform:uppercase; letter-spacing:.12em; font-size:.72rem; color:var(--green); margin-bottom:10px;">Prevention — Stop fraud before it can happen</div>
+          <div class="feature" style="margin-bottom:10px;"><div class="num">01</div><h3>BOTH SIGN OFF</h3><p>The mechanic AND the bike owner have to confirm every service entry. No one can fake a repair the owner didn't agree to.</p></div>
+          <div class="feature"><div class="num">02</div><h3>BUILT-IN SENSORS</h3><p>Hardware reads mileage and key events directly from the bike. No room to fudge the odometer.</p></div>
+        </div>
+        <div>
+          <div style="text-transform:uppercase; letter-spacing:.12em; font-size:.72rem; color:var(--amber); margin-bottom:10px;">Detection — Catch fraud when it tries to happen</div>
+          <div class="feature" style="margin-bottom:10px;"><div class="num">03</div><h3>BOUNTY HUNTERS WELCOME</h3><p>Spot a fake record and prove it — earn a share of the cheater's stake. The community becomes the watchdog.</p></div>
+          <div class="feature"><div class="num">04</div><h3>RE-CHECK AT PAYDAY</h3><p>When the bike is sold, financed, or insured, we re-verify the history. Fraud is caught the moment it would pay off.</p></div>
+        </div>
+        <div>
+          <div style="text-transform:uppercase; letter-spacing:.12em; font-size:.72rem; color:var(--red); margin-bottom:10px;">Enforcement — Make fraud expensive</div>
+          <div class="feature" style="margin-bottom:10px;"><div class="num">05</div><h3>EARN TRUST, EARN MORE</h3><p>Start small. As reputation grows, both your rewards and your stake at risk grow with you.</p></div>
+          <div class="feature" style="margin-bottom:10px;"><div class="num">06</div><h3>WAIT BEFORE YOU GET PAID</h3><p>Fees sit in escrow for 30–90 days. Any dispute claws the fee back and slashes part of the stake.</p></div>
+          <div class="feature"><div class="num">07</div><h3>RISK SCALES WITH ACTIVITY</h3><p>Each entry locks a slice of stake. Log a lot, have a lot to lose. Throwaway accounts can't profit.</p></div>
+        </div>
+      </div>
+      <div style="margin-top:12px; padding:12px; background:rgba(255,107,107,.08); border-left:3px solid var(--red); font-size:.82rem;">Each layer covers what the others miss — none of them works alone, all three together make fraud unprofitable</div>
+    </div></div></section>
+    <section class="slide" id="slide-32"><div class="wrap"><div class="card pad">
+      <div class="eyebrow">II.7 — RIDETRUE · STRESS TESTING &amp; BLACK SWAN PLAN</div>
+      <h2>Built to Survive</h2>
+      <p class="lede">Nine safeguards across three layers — what keeps the pool standing when many claims hit at once</p>
+      <div class="grid-3" style="margin-top:16px;">
+        <div>
+          <div style="text-transform:uppercase; letter-spacing:.12em; font-size:.72rem; color:var(--blue); margin-bottom:10px;">1. Reserve Layers — capital buffers built before anything goes wrong</div>
+          <div class="feature" style="margin-bottom:10px;"><div class="num">01 · ≥25%</div><h3>LIQUID RESERVE</h3><p>≥25% of pool always liquid. Never deployed to DeFi yield.</p></div>
+          <div class="feature" style="margin-bottom:10px;"><div class="num">02 · 20%</div><h3>CATASTROPHE RESERVE</h3><p>20% of every premium routed aside. Used only in extreme events.</p></div>
+          <div class="feature"><div class="num">03 · Tail risk</div><h3>REINSURANCE BACKSTOP</h3><p>External partner covers tail risk above pool capacity. Required before launch.</p></div>
+        </div>
+        <div>
+          <div style="text-transform:uppercase; letter-spacing:.12em; font-size:.72rem; color:var(--cyan); margin-bottom:10px;">2. Automatic Safeguards — always-on rules baked into the smart contracts</div>
+          <div class="feature" style="margin-bottom:10px;"><div class="num">04 · 4 triggers</div><h3>CIRCUIT BREAKER</h3><p>Auto-triggers emergency mode on claim spikes, low reserves, disaster zones, or 3× volume.</p></div>
+          <div class="feature" style="margin-bottom:10px;"><div class="num">05 · ₩5M / ₩3M</div><h3>COVERAGE CAPS</h3><p>Max ₩5M for normal claims, ₩3M for catastrophes. Clear exclusions on force majeure.</p></div>
+          <div class="feature"><div class="num">06 · 10–15%</div><h3>CONSERVATIVE YIELD</h3><p>Max 10–15% of pool deployed to DeFi. Blue-chip protocols only. Always withdrawable.</p></div>
+        </div>
+        <div>
+          <div style="text-transform:uppercase; letter-spacing:.12em; font-size:.72rem; color:var(--amber); margin-bottom:10px;">3. Crisis Playbook — what happens when a black swan actually hits</div>
+          <div class="feature" style="margin-bottom:10px;"><div class="num">07 · 50% / 50%</div><h3>STAGED PAYOUTS</h3><p>Emergency mode: 50% paid immediately, 50% over 3–6 months as liquidity returns.</p></div>
+          <div class="feature" style="margin-bottom:10px;"><div class="num">08 · Fair share</div><h3>PRO-RATA SHARING</h3><p>If pool is short, everyone receives a proportional share. Fair and transparent.</p></div>
+          <div class="feature"><div class="num">09 · +10–20%</div><h3>PREMIUM ADJUSTMENT</h3><p>Post-shock: 10–20% temporary increase to rebuild reserves. Capped to protect riders.</p></div>
+        </div>
+      </div>
+      <p class="footer-note" style="margin-top:8px;">Korean typhoons are base-case events, not tail events — calibrated accordingly</p>
+    </div></div></section>
+    <section class="slide" id="slide-33"><div class="wrap grid-2">
+      <div class="card pad">
+        <div class="eyebrow">II.7 — RIDETRUE · TOKEN DESIGN</div>
+        <h2>$MOTO Token</h2>
+        <p class="lede">Working draft — utility &amp; governance only · no speculative payouts</p>
+        <div class="stats" style="margin-top:16px;">
+          <div class="stat"><div class="kpi" style="font-size:1.3rem;">1B</div><div class="label">fixed cap · no inflation</div></div>
+          <div class="stat"><div class="kpi" style="font-size:1.3rem;">Base</div><div class="label">Ethereum L2</div></div>
+          <div class="stat"><div class="kpi" style="font-size:1.3rem;">ERC-20</div><div class="label">governance + staking</div></div>
+          <div class="stat"><div class="kpi" style="font-size:1.3rem;">0%</div><div class="label">inflation at TGE</div></div>
+        </div>
+        <h3 style="margin-top:20px; margin-bottom:10px;">Token Allocation</h3>
+        <div class="bars">
+          <div class="bar-row"><div>Community &amp; Ecosystem</div><div class="bar"><span style="width:30%"></span></div><div>30%</div></div>
+          <div class="bar-row"><div>Team &amp; Founders</div><div class="bar"><span style="width:18%"></span></div><div>18%</div></div>
+          <div class="bar-row"><div>Treasury / DAO</div><div class="bar"><span style="width:15%"></span></div><div>15%</div></div>
+          <div class="bar-row"><div>Pool Subsidy</div><div class="bar"><span style="width:15%"></span></div><div>15%</div></div>
+          <div class="bar-row"><div>Investors — Private</div><div class="bar"><span style="width:9%"></span></div><div>9%</div></div>
+          <div class="bar-row"><div>Investors — Seed</div><div class="bar"><span style="width:8%"></span></div><div>8%</div></div>
+          <div class="bar-row"><div>Liquidity Provision</div><div class="bar"><span style="width:5%"></span></div><div>5%</div></div>
+        </div>
+      </div>
+      <div class="card pad">
+        <div class="eyebrow">TOKEN UTILITY</div>
+        <h2>What $MOTO Does</h2>
+        <div class="grid-2" style="margin-top:12px;">
+          <div class="feature"><h3>STAKING &amp; SLASHING</h3><p>Lock $MOTO to gain write or verification rights. Bad behavior gets your stake slashed.</p></div>
+          <div class="feature"><h3>GOVERNANCE</h3><p>Token holders vote on fees, reserve ratios, rebate formulas, and supported integrations.</p></div>
+          <div class="feature"><h3>REPUTATION GATING</h3><p>Tiered staking unlocks higher write limits and bigger reward shares for trusted participants.</p></div>
+          <div class="feature"><h3>FEE DISCOUNTS</h3><p>Pay select API and registration fees in $MOTO at a discount — collected fees are burned or sent to treasury.</p></div>
+        </div>
+        <div style="margin-top:16px; padding:12px; background:rgba(255,191,86,.08); border-left:3px solid var(--amber); font-size:.82rem;"><strong>$MOTO IS UTILITY-ONLY</strong><br/>Insurance returns, rider rebates, and protocol revenue are paid in stablecoins — never in $MOTO. This separation protects users from speculative pressure and is deliberate.</div>
+        <p class="footer-note" style="margin-top:8px;">Draft assumptions · final parameters subject to legal and token-design advisor review</p>
+      </div>
+    </section>
+    <section class="slide" id="slide-34"><div class="wrap"><div class="card pad">
+      <div class="eyebrow">II.7 — RIDETRUE · COMPETITIVE LANDSCAPE</div>
+      <h2>Who We're Up Against</h2>
+      <p class="lede">Three competitor types — what they're good at, and where they break</p>
+      <div class="grid-3" style="margin-top:16px;">
+        <div class="feature">
+          <h3>CENTRALIZED HISTORY</h3>
+          <p style="color:var(--muted); font-size:.82rem; margin-bottom:10px;">CARFAX · Korea Auto Inspection · AutoCheck</p>
+          <div style="padding:10px; background:rgba(255,107,107,.08); border-radius:10px; font-size:.85rem; margin-bottom:8px;"><strong style="color:var(--red);">Where They Break</strong><br/>Data is owned by them, not you. You can't take your history if you switch. No real penalty for fake records.</div>
+          <div style="padding:10px; background:rgba(78,229,154,.08); border-radius:10px; font-size:.85rem;"><strong style="color:var(--green);">Our Edge</strong><br/>Records are user-owned, signed, and economically staked. Fraud is automatically slashed — accuracy has skin in the game.</div>
+        </div>
+        <div class="feature">
+          <h3>TRADITIONAL INSURERS</h3>
+          <p style="color:var(--muted); font-size:.82rem; margin-bottom:10px;">Samsung F&amp;M · Hyundai M&amp;F · DB Insurance</p>
+          <div style="padding:10px; background:rgba(255,107,107,.08); border-radius:10px; font-size:.85rem; margin-bottom:8px;"><strong style="color:var(--red);">Where They Break</strong><br/>Behavior data is locked to one insurer. Pricing still relies on age and demographics. Innovation is slow.</div>
+          <div style="padding:10px; background:rgba(78,229,154,.08); border-radius:10px; font-size:.85rem;"><strong style="color:var(--green);">Our Edge</strong><br/>Behavior score follows the rider across providers. Pricing reflects actual riding. Claims settle on-chain in days.</div>
+        </div>
+        <div class="feature">
+          <h3>DEFI INSURANCE</h3>
+          <p style="color:var(--muted); font-size:.82rem; margin-bottom:10px;">Nexus Mutual · InsurAce · Cover Protocol</p>
+          <div style="padding:10px; background:rgba(255,107,107,.08); border-radius:10px; font-size:.85rem; margin-bottom:8px;"><strong style="color:var(--red);">Where They Break</strong><br/>Built for crypto-native risks. No real-world data moat. Almost zero consumer reach.</div>
+          <div style="padding:10px; background:rgba(78,229,154,.08); border-radius:10px; font-size:.85rem;"><strong style="color:var(--green);">Our Edge</strong><br/>Real-world motorcycle data. Identity + behavior in one stack. Consumer-grade UX via account abstraction.</div>
+        </div>
+      </div>
+      <div class="grid-2" style="margin-top:14px;">
+        <div style="padding:14px; background:rgba(74,163,255,.08); border-left:3px solid var(--blue); font-size:.85rem; border-radius:0 12px 12px 0;"><strong>Our Moat: Vertical data network effect</strong><br/>Every new bike, rider, mechanic, dealer, and partner makes the dataset more valuable — and harder for anyone to copy from scratch.</div>
+        <div class="grid-2" style="gap:8px;">
+          <div class="mini"><b>Two-wheelers only</b><span>Specialized data, not generic insurance</span></div>
+          <div class="mini"><b>Identity + Behavior</b><span>Two protocols, one stack — each reinforces the other</span></div>
+          <div class="mini"><b>Korea-first wedge</b><span>Dense urban motorcycle market, expandable across Asia</span></div>
+          <div class="mini"><b>No head-on fight</b><span>We own the intersection none of them can occupy alone</span></div>
+        </div>
+      </div>
+    </div></div></section>
   </main>
   <script>
     const progressBar = document.getElementById('progressBar');
