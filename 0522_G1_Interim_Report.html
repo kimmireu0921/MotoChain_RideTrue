@@ -23,7 +23,7 @@
     .dotnav a { width:11px; height:11px; border-radius:50%; border:1px solid rgba(255,255,255,.28); background:rgba(255,255,255,.08); }
     .dotnav a.active { background:linear-gradient(180deg, var(--cyan), var(--blue)); border-color:transparent; }
     .deck { padding-top:92px; }
-    .slide { min-height:100vh; padding:34px 28px 56px; scroll-snap-align:start; display:flex; align-items:center; }
+    .slide { min-height:100vh; padding:34px 28px 56px; scroll-snap-align:start; display:flex; align-items:center; position:relative; }
     .wrap { width:100%; max-width:var(--max); margin:0 auto; }
     .hero, .grid-2, .grid-3, .flow, .stats { display:grid; gap:16px; }
     .hero { grid-template-columns:1.3fr .9fr; align-items:stretch; }
@@ -75,10 +75,11 @@
     .milestone .date { font-weight:800; color:var(--cyan); }
     @media (max-width:1100px) { .hero, .grid-2, .grid-3, .flow, .stats { grid-template-columns:repeat(2, minmax(0,1fr)); } .checklist { columns:1; } .mosaic { grid-template-columns:1fr; } }
     @media (max-width:720px) { .topbar { padding:12px 14px; } .nav { display:none; } .dotnav { display:none; } .slide { padding:28px 14px 46px; } .hero, .grid-2, .grid-3, .flow, .stats { grid-template-columns:1fr; } h1 { font-size:2.25rem; } .bar-row { grid-template-columns:1fr; } .milestone { grid-template-columns:1fr; } }
+    .pagenum { position:absolute; right:28px; bottom:18px; color:var(--muted); font-size:.92rem; }
   </style>
 </head>
 <body>
-  <header class="topbar"><div class="brand"><strong>MotoChain & RideTrue</strong><span>Presentation deck</span></div><nav class="nav" aria-label="Slide navigation"><a href="#slide-1">Title</a><a href="#slide-2">Summary</a><a href="#slide-3">Problem</a><a href="#slide-4">Architecture</a><a href="#slide-5">VIN Flow</a><a href="#slide-6">VIN States</a><a href="#slide-7">Oracle Flow</a><a href="#slide-8">Telematics</a><a href="#slide-9">UX</a><a href="#slide-10">Network</a><a href="#slide-11">Revenue</a><a href="#slide-12">Pool</a><a href="#slide-13">Token Tiers</a><a href="#slide-14">Token Flows</a><a href="#slide-15">Claims</a><a href="#slide-16">Growth</a><a href="#slide-17">Moat</a><a href="#slide-18">Security</a><a href="#slide-19">Economics</a><a href="#slide-20">Roadmap</a></nav></header>
+  <header class="topbar"><div class="brand"><strong>MotoChain & RideTrue</strong><span>Mireu Kim and Enxhi Topalli</span></div><nav class="nav" aria-label="Slide navigation"><a href="#slide-1">Title</a><a href="#slide-2">Summary</a><a href="#slide-3">Problem</a><a href="#slide-4">Architecture</a><a href="#slide-5">VIN Flow</a><a href="#slide-6">VIN States</a><a href="#slide-7">Oracle Flow</a><a href="#slide-8">Telematics</a><a href="#slide-9">UX</a><a href="#slide-10">Network</a><a href="#slide-11">Revenue</a><a href="#slide-12">Pool</a><a href="#slide-13">Token Tiers</a><a href="#slide-14">Token Flows</a><a href="#slide-15">Claims</a><a href="#slide-16">Growth</a><a href="#slide-17">Moat</a><a href="#slide-18">Security</a><a href="#slide-19">Economics</a><a href="#slide-20">Roadmap</a></nav></header>
   <div class="progress"><div id="progressBar"></div></div>
   <aside class="dotnav" aria-label="Slide dots"><a href="#slide-1"></a><a href="#slide-2"></a><a href="#slide-3"></a><a href="#slide-4"></a><a href="#slide-5"></a><a href="#slide-6"></a><a href="#slide-7"></a><a href="#slide-8"></a><a href="#slide-9"></a><a href="#slide-10"></a><a href="#slide-11"></a><a href="#slide-12"></a><a href="#slide-13"></a><a href="#slide-14"></a><a href="#slide-15"></a><a href="#slide-16"></a><a href="#slide-17"></a><a href="#slide-18"></a><a href="#slide-19"></a><a href="#slide-20"></a></aside>
   <main class="deck">
@@ -103,6 +104,28 @@
     <section class="slide" id="slide-19"><div class="wrap"><div class="card pad"><div class="eyebrow">Economic model</div><h2>Revenue composition & expense structure</h2><div class="grid-2"><div><h3 style="margin-bottom:8px;">Revenue sources</h3><table class="table" style="font-size:.82rem;"><tr><th>Source</th><th>Share</th></tr><tr><td>Insurance pool fee</td><td>44%</td></tr><tr><td>API / data access</td><td>22%</td></tr><tr><td>VIN registration</td><td>22%</td></tr><tr><td>Service logging</td><td>4%</td></tr><tr><td>Claims processing</td><td>1%</td></tr></table></div><div><h3 style="margin-bottom:8px;">Expense structure</h3><table class="table" style="font-size:.82rem;"><tr><th>Cost</th><th>Share</th></tr><tr><td>Operations</td><td>42%</td></tr><tr><td>Team</td><td>31%</td></tr><tr><td>Audits / compliance</td><td>16%</td></tr><tr><td>Contingency</td><td>11%</td></tr></table></div></div><div class="quote" style="margin-top:14px;">Year 1 revenue is estimated at ₩227M against roughly ₩1.2B in operating costs, so the model is a scale and trust-building story, not a short-term profit pitch.</div></div></div></section>
     <section class="slide" id="slide-20"><div class="wrap"><div class="card pad"><div class="eyebrow">Roadmap</div><h2>18-month path to launch</h2><div class="timeline"><div class="milestone"><div class="date">Q2 2026</div><div><strong>Core contracts</strong><div class="muted">VIN, RideTrue, staking, unit tests, internal review.</div></div></div><div class="milestone"><div class="date">Q3 2026</div><div><strong>External audit</strong><div class="muted">First audit firm, fixes, beta testnet, partner onboarding.</div></div></div><div class="milestone"><div class="date">Q4 2026</div><div><strong>Second audit</strong><div class="muted">Final hardening, bug bounty, launch prep.</div></div></div><div class="milestone"><div class="date">Q1 2027</div><div><strong>Beta launch</strong><div class="muted">Korea testnet, early mechanics, live monitoring.</div></div></div><div class="milestone"><div class="date">Q2 2027</div><div><strong>Mainnet</strong><div class="muted">Go-live Seoul, insurance launch, geographic scale.</div></div></div></div><div class="endcap" style="margin-top:16px;">Bottom line: the protocol only works if trust, pricing, and liquidity are solved together.</div></div></div></section>
   </main>
-  <script>const progressBar=document.getElementById('progressBar');const sections=[...document.querySelectorAll('section.slide')];const navLinks=[...document.querySelectorAll('.nav a, .dotnav a')];function setActive(){const scrollPos=window.scrollY+window.innerHeight*.35;let current=sections[0];for(const sec of sections)if(sec.offsetTop<=scrollPos)current=sec;navLinks.forEach(a=>a.classList.toggle('active',a.getAttribute('href')===`#${current.id}`));const maxScroll=document.documentElement.scrollHeight-window.innerHeight;progressBar.style.width=`${maxScroll>0?Math.min(100,Math.max(0,window.scrollY/maxScroll*100)):0}%`}window.addEventListener('scroll',setActive,{passive:true});window.addEventListener('resize',setActive);setActive();</script>
+  <script>
+    const progressBar = document.getElementById('progressBar');
+    const sections = [...document.querySelectorAll('section.slide')];
+    const navLinks = [...document.querySelectorAll('.nav a, .dotnav a')];
+    function setActive(){
+      const scrollPos = window.scrollY + window.innerHeight * .35;
+      let current = sections[0];
+      for(const sec of sections) if(sec.offsetTop <= scrollPos) current = sec;
+      navLinks.forEach(a => a.classList.toggle('active', a.getAttribute('href') === `#${current.id}`));
+      const maxScroll = document.documentElement.scrollHeight - window.innerHeight;
+      progressBar.style.width = `${maxScroll > 0 ? Math.min(100, Math.max(0, window.scrollY / maxScroll * 100)) : 0}%`;
+    }
+    window.addEventListener('scroll', setActive, {passive:true});
+    window.addEventListener('resize', setActive);
+    // add page numbers to each slide
+    sections.forEach((sec, i) => {
+      const el = document.createElement('div');
+      el.className = 'pagenum';
+      el.textContent = `${i+1}/${sections.length}`;
+      sec.appendChild(el);
+    });
+    setActive();
+  </script>
 </body>
 </html>
