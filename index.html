@@ -1325,6 +1325,11 @@
           <strong>🔒 ZK Privacy Guarantee</strong>
           These metrics are derived from a Zero-Knowledge proof. Your insurer sees the aggregated score — not your raw GPS routes, speed logs, or riding times.
         </div>
+        <div class="info-box blue" id="moto-discount-box" style="margin-top:8px; display:none;">
+          <strong>🪙 MOTO Balance</strong>
+          <span id="moto-discount-desc">Accumulate 1,000 MOTO to unlock a 20% premium discount.</span>
+          <br><small>Balance: <span id="moto-balance-display">0</span> MOTO</small>
+        </div>
         <div class="wizard-nav">
           <span></span>
           <button class="btn btn-secondary" onclick="insNext(0)">Next: Choose Plan →</button>
@@ -1424,6 +1429,10 @@
           <div class="success-ico">🛡️</div>
           <h2>Policy Activated!</h2>
           <p>Your first month's premium is staked into the RideTrue pool. Coverage is active. Keep riding safely — your score updates monthly and your premium adjusts automatically.</p>
+          <div class="info-box green" id="ins-moto-reward" style="display:none; margin:16px 0; text-align:left;">
+            <strong>🪙 +50 MOTO Earned!</strong>
+            You've been rewarded 50 MOTO tokens for activating your policy. These are now in your wallet and count toward future premium discounts.
+          </div>
           <div class="hash-box" id="ins-tx-hash">Tx: 0x…</div>
           <div style="display:flex; gap:12px; justify-content:center;">
             <button class="btn btn-outline" onclick="showPage('home')">← Back to Whitepaper</button>
@@ -1514,25 +1523,94 @@
       <div class="empty-state">Loading from chain…</div>
     </div>
   </div>
+
+  <!-- RideTrue Claims Feed -->
+  <div class="op-section">
+    <div class="op-section-header">
+      <h3>🛡️ RideTrue Claims</h3>
+      <span class="op-count" id="claims-count">loading…</span>
+    </div>
+    <div id="claims-feed">
+      <div class="empty-state">Loading from chain…</div>
+    </div>
+  </div>
 </div><!-- /page-operator -->
 
 
 <script>
   /* ── Contract config (Sepolia testnet) ── */
-  const VIN_CONTRACT_ADDRESS = '0xd9145CCE52D386f254917e481eB44e9943F391384'; // paste after deploying
+  const VIN_CONTRACT_ADDRESS      = '0xd9145CCE52D386f254917e481eB44e9943F391384'; // paste after deploying VINToken
+  const RIDETRUE_CONTRACT_ADDRESS = 'YOUR_RIDETRUE_ADDRESS';                         // paste after deploying RideTrue
+  const MOTO_CONTRACT_ADDRESS     = 'YOUR_MOTO_ADDRESS';                             // paste after deploying MOTOToken
+
   const VIN_ABI = [
     'function mintVIN(string vin, string make, string model, uint16 year, uint32 odometer) returns (uint256)',
     'function registerMechanic(string shopName, uint8 tier) external',
     'function logService(uint256 tokenId, string serviceType, string description, uint32 odometer) external',
+    'function confirmService(uint256 tokenId, uint256 pendingIdx) external',
+    'function transferVIN(uint256 tokenId, address to) external',
+    'function setSafetyScore(address rider, uint16 score) external',
     'function getServiceHistory(uint256 tokenId) view returns (tuple(address mechanic, string shopName, uint256 timestamp, string serviceType, string description, uint32 odometer)[])',
+    'function getPendingRecords(uint256 tokenId) view returns (tuple(address mechanic, string shopName, uint256 timestamp, string serviceType, string description, uint32 odometer, bool confirmed)[])',
     'function getTokenIdByVIN(string vin) view returns (uint256)',
     'function totalMinted() view returns (uint256)',
     'function vinData(uint256) view returns (string vin, string make, string model, uint16 year, uint32 odometer, address originalOwner, uint256 mintedAt)',
     'function mechanics(address) view returns (string shopName, uint8 tier, uint256 registeredAt, bool isActive)',
+    'function safetyScores(address) view returns (uint16)',
+    'function mechStakes(address) view returns (uint256)',
+    'function getMechanicStake(address mechanic) view returns (uint256)',
+    'function tierStakeAmounts(uint256) view returns (uint256)',
+    'function slashMechanic(address mechanic) external',
+    'function deregisterMechanic() external',
+    'function setMotoToken(address motoToken) external',
     'event VINMinted(uint256 indexed tokenId, string vin, address indexed owner)',
+    'event VINTransferred(uint256 indexed tokenId, string vin, address indexed from, address indexed to, uint256 timestamp)',
     'event MechanicRegistered(address indexed mechanic, string shopName, uint8 tier)',
+    'event ServicePending(uint256 indexed tokenId, string vin, address indexed mechanic, string serviceType, uint256 pendingIdx, uint256 timestamp)',
     'event ServiceLogged(uint256 indexed tokenId, string vin, address indexed mechanic, string serviceType, uint256 timestamp)'
   ];
+
+  const RIDETRUE_ABI = [
+    'function activatePolicy(uint256 vinTokenId, uint8 planTier) payable',
+    'function lapsePolicy(address rider) external',
+    'function submitClaim(string description, uint256 requestedAmount) external',
+    'function approveClaim(uint256 claimId) external',
+    'function rejectClaim(uint256 claimId) external',
+    'function setSafetyScore(address rider, uint16 score) external',
+    'function setMotoToken(address motoToken) external',
+    'function seedPool() payable',
+    'function getPoolBalance() view returns (uint256)',
+    'function getPolicy(address rider) view returns (tuple(uint256 vinTokenId, uint8 planTier, uint256 stakedAmount, uint256 startTime, uint256 coverageEnd, uint8 status, uint16 safetyScore, bool motoDiscounted))',
+    'function getClaim(uint256 claimId) view returns (tuple(address rider, uint256 vinTokenId, string description, uint256 timestamp, uint256 requestedAmount, uint8 status))',
+    'function getClaimsCount() view returns (uint256)',
+    'function getPlanPrice(uint8 tier) view returns (uint256)',
+    'function getEffectivePrice(address rider, uint8 tier) view returns (uint256 price, bool discounted)',
+    'function getSafetyScore(address rider) view returns (uint16)',
+    'function hasMotoDiscount(address rider) view returns (bool)',
+    'function safetyScores(address) view returns (uint16)',
+    'function planPrices(uint256) view returns (uint256)',
+    'function MOTO_DISCOUNT_THRESHOLD() view returns (uint256)',
+    'function POLICY_MOTO_REWARD() view returns (uint256)',
+    'event PolicyActivated(address indexed rider, uint256 indexed vinTokenId, uint8 planTier, uint256 amount, uint16 safetyScore, bool motoDiscounted)',
+    'event PolicyLapsed(address indexed rider, uint256 indexed vinTokenId)',
+    'event PolicyRewardMinted(address indexed rider, uint256 amount)',
+    'event ClaimSubmitted(uint256 indexed claimId, address indexed rider, uint256 indexed vinTokenId, uint256 requestedAmount)',
+    'event ClaimApproved(uint256 indexed claimId, address indexed rider, uint256 payout)',
+    'event ClaimRejected(uint256 indexed claimId, address indexed rider)'
+  ];
+
+  const MOTO_ABI = [
+    'function balanceOf(address account) view returns (uint256)',
+    'function transfer(address to, uint256 amount) returns (bool)',
+    'function approve(address spender, uint256 amount) returns (bool)',
+    'function allowance(address owner, address spender) view returns (uint256)',
+    'function mint(address to, uint256 amount) external',
+    'function burn(uint256 amount) external',
+    'function totalSupply() view returns (uint256)',
+    'event Transfer(address indexed from, address indexed to, uint256 value)',
+    'event Approval(address indexed owner, address indexed spender, uint256 value)'
+  ];
+
   const SEPOLIA_CHAIN_ID = '0xaa36a7';
 
   /* ── State ── */
@@ -1560,6 +1638,7 @@
     window.scrollTo({ top: 0, behavior: 'smooth' });
     refreshGates();
     if (id === 'operator') opLoadData();
+    if (id === 'insurance') insFetchScore();
   }
 
   /* ── Wallet gates ── */
@@ -1792,6 +1871,23 @@
       const shopName = getVal('m-shop');
       const tier = tierMap[selectedTier];
 
+      // Approve MOTO stake if token is configured
+      if (MOTO_CONTRACT_ADDRESS !== 'YOUR_MOTO_ADDRESS') {
+        const stakeAmounts = [
+          ethers.parseEther('100'),   // Basic
+          ethers.parseEther('500'),   // Verified
+          ethers.parseEther('2000')   // Expert
+        ];
+        const stakeRequired = stakeAmounts[tier];
+        const motoContract  = new ethers.Contract(MOTO_CONTRACT_ADDRESS, MOTO_ABI, signer);
+        const allowance     = await motoContract.allowance(walletAddress, VIN_CONTRACT_ADDRESS);
+        if (allowance < stakeRequired) {
+          showTx('🪙', 'Approve MOTO Stake', `Approve ${['100','500','2000'][tier]} MOTO stake in MetaMask (step 1 of 2).`, 'amber');
+          const approveTx = await motoContract.approve(VIN_CONTRACT_ADDRESS, stakeRequired);
+          await approveTx.wait();
+        }
+      }
+
       showTx('🦊', 'Confirm in MetaMask', 'Please approve the mechanic registration transaction.', 'amber');
       const tx = await contract.registerMechanic(shopName, tier);
       showTx('⛓️', 'Registering on-chain…', 'Writing your mechanic credentials to Sepolia.', 'amber');
@@ -1804,6 +1900,54 @@
       hideTx();
       if (e.code === 4001) alert('Transaction rejected.');
       else alert('Registration failed: ' + (e.reason || e.message || e));
+    }
+  }
+
+  /* ── Insurance: fetch on-chain safety score + MOTO discount status ── */
+  async function insFetchScore() {
+    if (!walletAddress) return;
+    try {
+      const mmProvider = getMetaMaskProvider();
+      const provider   = mmProvider
+        ? new ethers.BrowserProvider(mmProvider)
+        : new ethers.JsonRpcProvider('https://rpc.sepolia.org');
+
+      let score = 0;
+      if (RIDETRUE_CONTRACT_ADDRESS !== 'YOUR_RIDETRUE_ADDRESS') {
+        const rtContract = new ethers.Contract(RIDETRUE_CONTRACT_ADDRESS, RIDETRUE_ABI, provider);
+        score = Number(await rtContract.getSafetyScore(walletAddress));
+      } else if (VIN_CONTRACT_ADDRESS !== 'YOUR_CONTRACT_ADDRESS') {
+        const vinContract = new ethers.Contract(VIN_CONTRACT_ADDRESS, VIN_ABI, provider);
+        score = Number(await vinContract.safetyScores(walletAddress));
+      }
+
+      if (score > 0) {
+        document.querySelectorAll('.score-val').forEach(el => el.textContent = score);
+        document.querySelectorAll('.score-bar').forEach(el => el.style.width = score + '%');
+      }
+
+      // Check MOTO balance and show discount badge
+      if (MOTO_CONTRACT_ADDRESS !== 'YOUR_MOTO_ADDRESS') {
+        const motoContract = new ethers.Contract(MOTO_CONTRACT_ADDRESS, MOTO_ABI, provider);
+        const balance = await motoContract.balanceOf(walletAddress);
+        const balanceMOTO = Number(ethers.formatEther(balance));
+        const THRESHOLD   = 1000;
+        const eligible    = balanceMOTO >= THRESHOLD;
+        const box = document.getElementById('moto-discount-box');
+        if (box) {
+          document.getElementById('moto-balance-display').textContent =
+            balanceMOTO.toLocaleString(undefined, { maximumFractionDigits: 0 });
+          box.style.display = 'block';
+          box.className = 'info-box ' + (eligible ? 'green' : 'blue');
+          box.querySelector('strong').textContent =
+            eligible ? '🪙 MOTO Holder — 20% Discount Applied!' : '🪙 MOTO Balance';
+          document.getElementById('moto-discount-desc').textContent = eligible
+            ? `You hold ${balanceMOTO.toLocaleString(undefined,{maximumFractionDigits:0})} MOTO ≥ 1,000 threshold — your premium is 20% off.`
+            : `You hold ${balanceMOTO.toLocaleString(undefined,{maximumFractionDigits:0})} MOTO. Accumulate 1,000 MOTO to unlock a 20% premium discount.`;
+        }
+      }
+    } catch(e) {
+      console.warn('Safety score / MOTO fetch failed:', e.message);
     }
   }
 
@@ -1829,13 +1973,83 @@
     document.querySelectorAll('.plan-card').forEach(c => c.classList.remove('selected'));
     el.classList.add('selected');
   }
-  function insActivate() {
-    showTx('🦊','Confirm in MetaMask','Please approve the USDC stake to activate your insurance policy.','green');
-    setTimeout(() => {
+  async function insActivate() {
+    const planTierMap = { basic: 0, standard: 1, premium: 2 };
+    const planEthMap  = { basic: '0.001', standard: '0.002', premium: '0.004' };
+
+    // Simulation mode when contract not yet deployed
+    if (RIDETRUE_CONTRACT_ADDRESS === 'YOUR_RIDETRUE_ADDRESS') {
+      showTx('🦊','Confirm in MetaMask','[DEMO] Simulating policy activation — deploy RideTrue to go live.','green');
+      setTimeout(() => {
+        showTx('🛡️','Activating policy…','Staking ETH into the RideTrue pool and activating your coverage.','green');
+        setTimeout(() => { hideTx(); setText('ins-tx-hash','Tx: ' + fakeTxHash()); insGo(4); }, 2800);
+      }, 1800);
+      return;
+    }
+
+    const mmProvider = getMetaMaskProvider();
+    if (!mmProvider) { alert('Please connect your wallet first.'); return; }
+    try {
+      const chainId = await mmProvider.request({ method: 'eth_chainId' });
+      if (chainId !== SEPOLIA_CHAIN_ID) {
+        await mmProvider.request({ method: 'wallet_switchEthereumChain', params: [{ chainId: SEPOLIA_CHAIN_ID }] });
+      }
+
+      const provider  = new ethers.BrowserProvider(mmProvider);
+      const signer    = await provider.getSigner();
+      const rtContract  = new ethers.Contract(RIDETRUE_CONTRACT_ADDRESS, RIDETRUE_ABI, signer);
+      const vinContract = new ethers.Contract(VIN_CONTRACT_ADDRESS, VIN_ABI, provider);
+
+      const vin      = getVal('i-vin');
+      const planTier = planTierMap[selectedPlan];
+      const ethAmt   = planEthMap[selectedPlan];
+
+      // Look up VIN token ID
+      showTx('🔍', 'Looking up VIN…', 'Fetching token ID for this VIN from the registry.', 'green');
+      const tokenId = vin.length === 17
+        ? await vinContract.getTokenIdByVIN(vin)
+        : 0n;
+      if (tokenId === 0n) {
+        hideTx();
+        alert('VIN not found on-chain. Please mint your VIN token first in the Rider section.');
+        return;
+      }
+
+      // Apply MOTO discount if eligible
+      let finalEth = ethAmt;
+      let discountMsg = '';
+      if (MOTO_CONTRACT_ADDRESS !== 'YOUR_MOTO_ADDRESS') {
+        const motoContract = new ethers.Contract(MOTO_CONTRACT_ADDRESS, MOTO_ABI, provider);
+        const balance = await motoContract.balanceOf(walletAddress);
+        if (Number(ethers.formatEther(balance)) >= 1000) {
+          finalEth    = (parseFloat(ethAmt) * 0.8).toFixed(4);
+          discountMsg = ' (20% MOTO discount applied)';
+        }
+      }
+
+      showTx('🦊', 'Confirm in MetaMask', `Please approve ${finalEth} ETH${discountMsg} to activate your ${planData[selectedPlan].name} policy.`, 'green');
+      const tx = await rtContract.activatePolicy(tokenId, planTier, {
+        value: ethers.parseEther(finalEth)
+      });
+
+      showTx('🛡️', 'Activating policy…', 'Staking ETH into the RideTrue pool on Sepolia.', 'green');
+      await tx.wait();
+
       hideTx();
-      showTx('🛡️','Activating policy…','Staking USDC into the RideTrue pool and activating your coverage.','green');
-      setTimeout(() => { hideTx(); setText('ins-tx-hash','Tx: ' + fakeTxHash()); insGo(4); }, 2800);
-    }, 1800);
+      setText('ins-tx-hash', 'Tx: ' + tx.hash);
+      // Show MOTO reward in success panel if contract is live
+      const rewardNote = document.getElementById('ins-moto-reward');
+      if (rewardNote && MOTO_CONTRACT_ADDRESS !== 'YOUR_MOTO_ADDRESS') {
+        rewardNote.style.display = 'block';
+      }
+      insGo(4);
+    } catch(e) {
+      hideTx();
+      if (e.code === 4001) alert('Transaction rejected in MetaMask.');
+      else if (e.message?.includes('Policy already active')) alert('You already have an active policy.');
+      else if (e.message?.includes('You do not own this VIN token')) alert('Your wallet does not own this VIN token.');
+      else alert('Activation failed: ' + (e.reason || e.message || e));
+    }
   }
 
   /* ── Mechanic: log service record ── */
@@ -1951,12 +2165,47 @@
         : new ethers.JsonRpcProvider('https://rpc.sepolia.org');
       const contract = new ethers.Contract(VIN_CONTRACT_ADDRESS, VIN_ABI, provider);
 
-      // Pool stats (simulated — RideTrue pool contract TBD)
-      const poolBase  = 142800;
-      const jitter    = Math.floor(Math.random() * 2000) - 1000;
-      document.getElementById('op-pool').textContent     = (poolBase + jitter).toLocaleString() + ' USDC';
-      document.getElementById('op-policies').textContent = '187';
-      document.getElementById('op-claims').textContent   = '9,420 USDC';
+      // RideTrue pool stats (live when contract deployed)
+      if (RIDETRUE_CONTRACT_ADDRESS !== 'YOUR_RIDETRUE_ADDRESS') {
+        const rtContract = new ethers.Contract(RIDETRUE_CONTRACT_ADDRESS, RIDETRUE_ABI, provider);
+        const poolBal    = await rtContract.getPoolBalance();
+        document.getElementById('op-pool').textContent = parseFloat(ethers.formatEther(poolBal)).toFixed(4) + ' ETH';
+
+        const policyFilter = rtContract.filters.PolicyActivated();
+        const policyEvents = await rtContract.queryFilter(policyFilter, 0, 'latest');
+        document.getElementById('op-policies').textContent = policyEvents.length.toString();
+
+        const claimFilter  = rtContract.filters.ClaimApproved();
+        const claimEvents  = await rtContract.queryFilter(claimFilter, 0, 'latest');
+        const totalPaid    = claimEvents.reduce((sum, e) => sum + e.args.payout, 0n);
+        document.getElementById('op-claims').textContent = parseFloat(ethers.formatEther(totalPaid)).toFixed(4) + ' ETH';
+
+        // Populate claims feed
+        const allClaimFilter  = rtContract.filters.ClaimSubmitted();
+        const allClaimEvents  = await rtContract.queryFilter(allClaimFilter, 0, 'latest');
+        document.getElementById('claims-count').textContent = allClaimEvents.length + ' claims';
+        document.getElementById('claims-feed').innerHTML = allClaimEvents.length === 0
+          ? '<div class="empty-state">No claims submitted yet.</div>'
+          : allClaimEvents.slice().reverse().map(e => {
+              const claimId = e.args.claimId;
+              return `<div class="svc-card">
+                <div class="svc-header">
+                  <span class="svc-type">Claim #${claimId}</span>
+                  <span class="svc-date">Block ${e.blockNumber}</span>
+                </div>
+                <div class="svc-vin">VIN Token #${e.args.vinTokenId} · Rider: ${e.args.rider.slice(0,6)}…${e.args.rider.slice(-4)}</div>
+                <div class="svc-meta">Requested: ${parseFloat(ethers.formatEther(e.args.requestedAmount)).toFixed(4)} ETH</div>
+              </div>`;
+            }).join('');
+      } else {
+        const poolBase  = 142800;
+        const jitter    = Math.floor(Math.random() * 2000) - 1000;
+        document.getElementById('op-pool').textContent     = (poolBase + jitter).toLocaleString() + ' USDC';
+        document.getElementById('op-policies').textContent = '187';
+        document.getElementById('op-claims').textContent   = '9,420 USDC';
+        document.getElementById('claims-count').textContent = '—';
+        document.getElementById('claims-feed').innerHTML   = '<div class="empty-state">Deploy RideTrue contract to see live claims.</div>';
+      }
       document.getElementById('op-yield').textContent    = '4.7%';
 
       // On-chain: VINs minted
