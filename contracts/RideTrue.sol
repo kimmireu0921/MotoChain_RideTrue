@@ -25,19 +25,17 @@ import "@openzeppelin/contracts/access/Ownable.sol";
  *    5. Admin approves or rejects each claim (approveClaim / rejectClaim).
  *    6. Anyone calls lapsePolicy(rider) once their 30-day window expires.
  */
+interface IVINToken {
+    function ownerOf(uint256 tokenId) external view returns (address);
+    function safetyScores(address rider) external view returns (uint16);
+}
+
+interface IRideTrueMOTO {
+    function balanceOf(address account) external view returns (uint256);
+    function mint(address to, uint256 amount) external;
+}
+
 contract RideTrue is Ownable {
-
-    // ── Interfaces ────────────────────────────────────────────────────────────
-
-    interface IVINToken {
-        function ownerOf(uint256 tokenId) external view returns (address);
-        function safetyScores(address rider) external view returns (uint16);
-    }
-
-    interface IMOTOToken {
-        function balanceOf(address account) external view returns (uint256);
-        function mint(address to, uint256 amount) external;
-    }
 
     // ── Types ─────────────────────────────────────────────────────────────────
 
@@ -74,7 +72,7 @@ contract RideTrue is Ownable {
     // ── State ─────────────────────────────────────────────────────────────────
 
     IVINToken  public vinContract;
-    IMOTOToken public motoToken;
+    IRideTrueMOTO public motoToken;
 
     uint256[3] public planPrices = [
         0.001 ether,   // Basic
@@ -121,7 +119,7 @@ contract RideTrue is Ownable {
     // ── Admin ─────────────────────────────────────────────────────────────────
 
     function setMotoToken(address _motoToken) external onlyOwner {
-        motoToken = IMOTOToken(_motoToken);
+        motoToken = IRideTrueMOTO(_motoToken);
         emit MotoTokenSet(_motoToken);
     }
 
@@ -315,7 +313,7 @@ contract RideTrue is Ownable {
 
     function _hasMotoDiscount(address rider) internal view returns (bool) {
         if (address(motoToken) == address(0)) return false;
-        return motoToken.balanceOf(rider) >= MOTO_DISCOUNT_THRESHOLD;
+        return IRideTrueMOTO(address(motoToken)).balanceOf(rider) >= MOTO_DISCOUNT_THRESHOLD;
     }
 
     receive() external payable {}

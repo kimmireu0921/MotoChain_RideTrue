@@ -4,6 +4,14 @@ pragma solidity ^0.8.20;
 import "@openzeppelin/contracts/token/ERC721/ERC721.sol";
 import "@openzeppelin/contracts/access/Ownable.sol";
 
+interface IMOTOToken {
+    function transferFrom(address from, address to, uint256 amount) external returns (bool);
+    function transfer(address to, uint256 amount) external returns (bool);
+    function burn(uint256 amount) external;
+    function mint(address to, uint256 amount) external;
+    function balanceOf(address account) external view returns (uint256);
+}
+
 /**
  * @title  VINToken
  * @notice MotoChain identity layer — one ERC-721 per motorcycle VIN.
@@ -20,16 +28,6 @@ import "@openzeppelin/contracts/access/Ownable.sol";
  *       updates on-chain odometer, mints MOTO reward to mechanic.
  */
 contract VINToken is ERC721, Ownable {
-
-    // ── External interface ────────────────────────────────────────────────────
-
-    interface IMOTOToken {
-        function transferFrom(address from, address to, uint256 amount) external returns (bool);
-        function transfer(address to, uint256 amount) external returns (bool);
-        function burn(uint256 amount) external;
-        function mint(address to, uint256 amount) external;
-        function balanceOf(address account) external view returns (uint256);
-    }
 
     // ── Types ─────────────────────────────────────────────────────────────────
 
@@ -203,7 +201,7 @@ contract VINToken is ERC721, Ownable {
         if (address(motoToken) != address(0) && stakeRequired > 0) {
             require(
                 motoToken.transferFrom(msg.sender, address(this), stakeRequired),
-                "MOTO stake transfer failed — approve VINToken first"
+                "MOTO stake transfer failed - approve VINToken first"
             );
             mechStakes[msg.sender] = stakeRequired;
         }
@@ -292,7 +290,7 @@ contract VINToken is ERC721, Ownable {
         require(!pr.confirmed, "Already confirmed");
         require(
             pr.odometer >= vinData[tokenId].odometer,
-            "Odometer conflict — another record updated the counter first"
+            "Odometer conflict - another record updated the counter first"
         );
 
         pr.confirmed = true;
